@@ -188,6 +188,7 @@ RUN touch Launch.sh \
     && chmod +x ./Launch.sh \
     && tee -a Launch.sh <<< '#!/bin/bash' \
     && tee -a Launch.sh <<< 'set -eux' \
+    && tee -a Launch.sh <<< 'echo "This is a MOD!"' \
     && tee -a Launch.sh <<< 'sudo chown    $(id -u):$(id -g) /dev/kvm 2>/dev/null || true' \
     && tee -a Launch.sh <<< 'sudo chown -R $(id -u):$(id -g) /dev/snd 2>/dev/null || true' \
     && tee -a Launch.sh <<< '[[ "${RAM}" = max ]] && export RAM="$(("$(head -n1 /proc/meminfo | tr -dc "[:digit:]") / 1000000"))"' \
@@ -213,8 +214,7 @@ RUN touch Launch.sh \
     && tee -a Launch.sh <<< '-netdev user,id=net0,hostfwd=tcp::${INTERNAL_SSH_PORT:-10022}-:22,hostfwd=tcp::${SCREEN_SHARE_PORT:-5900}-:5900,${ADDITIONAL_PORTS} \' \
     && tee -a Launch.sh <<< '-device ${NETWORKING:-vmxnet3},netdev=net0,id=net0,mac=${MAC_ADDRESS:-52:54:00:09:49:17} \' \
     && tee -a Launch.sh <<< '-monitor stdio \' \
-    && tee -a Launch.sh <<< '-boot menu=on \' \
-    && tee -a Launch.sh <<< '-vga vmware \' \
+    && tee -a Launch.sh <<< '-boot menu=on \' \   
     && tee -a Launch.sh <<< '${EXTRA:-}'
 
 # docker exec containerid mv ./Launch-nopicker.sh ./Launch.sh
